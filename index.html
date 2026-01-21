@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tic Tac Toe </title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="layout">
+
+    <aside class="trivia">
+      <h3>🍩 DOUGHNUT</h3>
+      <p>
+        The hole exists for even cooking.
+        Popularized in the 1800s.
+        Engineered comfort food.
+      </p>
+    </aside>
+
+    <main class="game">
+      <h1>TIC TAC TOE</h1>
+      <p id="status">Player 🍩 Turn</p>
+
+      <div class="controls">
+        <input id="p1" placeholder="Player 1">
+        <input id="p2" placeholder="Player 2 / AI">
+        <label>
+          <input type="checkbox" id="ai">
+          AI opponent
+        </label>
+      </div>
+
+      <div class="board">
+        <div class="cell" data-i="0"></div>
+        <div class="cell" data-i="1"></div>
+        <div class="cell" data-i="2"></div>
+        <div class="cell" data-i="3"></div>
+        <div class="cell" data-i="4"></div>
+        <div class="cell" data-i="5"></div>
+        <div class="cell" data-i="6"></div>
+        <div class="cell" data-i="7"></div>
+        <div class="cell" data-i="8"></div>
+      </div>
+
+      <button id="reset">RESET FRUITS</button>
+    </main>
+
+    <aside class="trivia">
+      <h3>🍌 BANANA</h3>
+      <p>
+        Botanically a berry.
+        Curves toward sunlight.
+        Designed by nature.
+      </p>
+    </aside>
+
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <p id="result"></p>
+      <button onclick="resetGame()">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
