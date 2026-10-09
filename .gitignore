@@ -1,3 +1,6 @@
 .terraform/
 *.tfstate
 *.tfstate.*
+# Terraform generated files
+terraform/tfplan
+terraform/tfplan.*
