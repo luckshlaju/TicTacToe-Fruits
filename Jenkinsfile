@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -6,10 +7,24 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Login to GHCR') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'lucksgit',
+                    usernameVariable: 'GHCR_USER',
+                    passwordVariable: 'GHCR_TOKEN'
+                )]) {
+                    bat '''
+                        @echo off
+                        echo %GHCR_TOKEN% | docker login ghcr.io -u %GHCR_USER% --password-stdin
+                    '''
+                }
             }
         }
 
