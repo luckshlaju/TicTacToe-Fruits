@@ -39,5 +39,19 @@ pipeline {
                 bat 'docker push %IMAGE_NAME%:latest'
             }
         }
+
+        stage('Test SSM Connection') {
+            steps {
+                bat '''
+                    aws ssm send-command ^
+                      --region ap-south-1 ^
+                      --instance-ids i-08fcef8e218b45d0e ^
+                      --document-name AWS-RunShellScript ^
+                      --parameters "commands=['echo SSM_DEPLOYMENT_READY']" ^
+                      --query "Command.CommandId" ^
+                      --output text
+                '''
+            }
+        }
     }
 }
