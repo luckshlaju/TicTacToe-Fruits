@@ -1,67 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tic Tac Toe </title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>Tic Tac Toe Fruits</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="layout">
 
-    <aside class="trivia">
-      <h3>🍩 DOUGHNUT</h3>
-      <p>
-        The hole exists for even cooking.
-        Popularized in the 1800s.
-        Engineered comfort food.
-      </p>
+    <aside class="trivia trivia-doughnut">
+      <div class="trivia-content">
+        <h3>🍩 DOUGHNUT</h3>
+        <p id="doughnut-fact" aria-live="polite">
+          Discover an interesting doughnut fact.
+        </p>
+      </div>
     </aside>
 
     <main class="game">
       <h1>TIC TAC TOE</h1>
-      <p id="status">Player 🍩 Turn</p>
+      <p id="status" aria-live="polite">Player 🍩 Turn</p>
 
       <div class="controls">
-        <input id="p1" placeholder="Player 1">
-        <input id="p2" placeholder="Player 2 / AI">
-        <label>
+        <input
+          id="p1"
+          type="text"
+          maxlength="24"
+          placeholder="Player 1"
+          aria-label="Player 1 name"
+        >
+
+        <input
+          id="p2"
+          type="text"
+          maxlength="24"
+          placeholder="Player 2 / AI"
+          aria-label="Player 2 name"
+        >
+
+        <label for="ai">
           <input type="checkbox" id="ai">
           AI opponent
         </label>
       </div>
 
-      <div class="board">
-        <div class="cell" data-i="0"></div>
-        <div class="cell" data-i="1"></div>
-        <div class="cell" data-i="2"></div>
-        <div class="cell" data-i="3"></div>
-        <div class="cell" data-i="4"></div>
-        <div class="cell" data-i="5"></div>
-        <div class="cell" data-i="6"></div>
-        <div class="cell" data-i="7"></div>
-        <div class="cell" data-i="8"></div>
+      <div class="board" role="group" aria-label="Tic Tac Toe board">
+        <div class="cell" data-i="0" role="button" tabindex="0" aria-label="Cell 1"></div>
+        <div class="cell" data-i="1" role="button" tabindex="0" aria-label="Cell 2"></div>
+        <div class="cell" data-i="2" role="button" tabindex="0" aria-label="Cell 3"></div>
+        <div class="cell" data-i="3" role="button" tabindex="0" aria-label="Cell 4"></div>
+        <div class="cell" data-i="4" role="button" tabindex="0" aria-label="Cell 5"></div>
+        <div class="cell" data-i="5" role="button" tabindex="0" aria-label="Cell 6"></div>
+        <div class="cell" data-i="6" role="button" tabindex="0" aria-label="Cell 7"></div>
+        <div class="cell" data-i="7" role="button" tabindex="0" aria-label="Cell 8"></div>
+        <div class="cell" data-i="8" role="button" tabindex="0" aria-label="Cell 9"></div>
       </div>
 
-      <button id="reset">RESET FRUITS</button>
+      <button id="reset" type="button">RESET FRUITS</button>
     </main>
 
-    <aside class="trivia">
-      <h3>🍌 BANANA</h3>
-      <p>
-        Botanically a berry.
-        Curves toward sunlight.
-        Designed by nature.
-      </p>
+    <aside class="trivia trivia-banana">
+      <div class="trivia-content">
+        <h3>🍌 BANANA</h3>
+        <p id="banana-fact" aria-live="polite">
+          Discover an interesting banana fact.
+        </p>
+      </div>
     </aside>
 
   </div>
 
   <div class="overlay" id="overlay">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="result">
       <p id="result"></p>
-      <button onclick="resetGame()">PLAY AGAIN</button>
+      <button type="button" onclick="resetGame()">PLAY AGAIN</button>
     </div>
   </div>
 

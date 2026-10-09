@@ -1,159 +1,545 @@
+
 * {
   box-sizing: border-box;
   font-family: Inter, system-ui, sans-serif;
 }
 
+:root {
+  --cyan: #00f5e1;
+  --cyan-border: rgba(0, 245, 225, 0.35);
+  --text: #e5e7eb;
+  --muted: #9299a3;
+  --surface: #090b0d;
+}
+
 body {
   margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at top, #050505, #000 70%);
-  color: #e5e7eb;
+  min-height: 100vh;
+  padding: 40px 24px;
+  background:
+    radial-gradient(
+      ellipse at 50% 42%,
+      rgba(0, 245, 225, 0.045),
+      transparent 42%
+    ),
+    radial-gradient(circle at top, #080a0b, #000 72%);
+  color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
 }
 
 .layout {
+  width: min(100%, 1190px);
   display: grid;
-  grid-template-columns: 220px auto 220px;
-  gap: 56px;
+  grid-template-columns: 220px minmax(0, 1fr) 220px;
+  gap: 48px;
   align-items: center;
 }
 
+/* Trivia panels */
+
 .trivia {
-  opacity: 0.35;
+  position: relative;
+  min-width: 0;
+  padding: 105px 0 20px;
+  color: #a4aab2;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.8;
+  isolation: isolate;
+}
+
+.trivia-content {
+  position: relative;
+  z-index: 1;
 }
 
 .trivia h3 {
-  color: #00f5e1;
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
+  margin: 0 0 14px;
+  color: var(--cyan);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 14px rgba(0, 245, 225, 0.15);
 }
 
+.trivia p {
+  margin: 0;
+  color: #a9b1bc;
+  font-size: 13px;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+}
+
+/* Decorative fruit centered above the trivia */
+
+.trivia::after {
+  position: absolute;
+  z-index: 0;
+  top: -8px;
+  left: 50%;
+  right: auto;
+  font-size: 94px;
+  line-height: 1;
+  opacity: 0.12;
+  pointer-events: none;
+  user-select: none;
+  transform: translateX(-50%);
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease;
+}
+
+.trivia-doughnut::after {
+  content: "🍩";
+}
+
+.trivia-banana::after {
+  content: "🍌";
+}
+
+.trivia:hover::after {
+  opacity: 0.19;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Main game area */
+
 .game {
+  min-width: 0;
   text-align: center;
+  position: relative;
 }
 
 h1 {
-  font-size: 30px;
+  margin: 0 0 12px;
+  font-size: clamp(25px, 3vw, 30px);
+  font-weight: 600;
   letter-spacing: 6px;
-  color: #00f5e1;
-  text-shadow: 0 0 20px rgba(0,245,225,0.45);
-  margin-bottom: 10px;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0, 245, 225, 0.4);
 }
 
 #status {
+  min-height: 21px;
+  margin: 0 0 28px;
+  color: #c5cbd2;
   font-size: 14px;
-  opacity: 0.6;
-  margin-bottom: 28px;
+  opacity: 0.9;
 }
+
+/* Player name fields and AI checkbox */
 
 .controls {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  align-items: center;
+  gap: 12px 18px;
   flex-wrap: wrap;
   margin-bottom: 28px;
 }
 
-.controls input {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  color: #e5e7eb;
-  padding: 6px;
+.controls input:not([type="checkbox"]) {
+  width: 210px;
+  min-width: 0;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 9px;
+  color: var(--text);
+  font-size: 13px;
   outline: none;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
 }
 
-.controls input::placeholder {
-  color: rgba(255,255,255,0.4);
+.controls input:not([type="checkbox"])::placeholder {
+  color: #9299a3;
+  opacity: 1;
+}
+
+.controls input:not([type="checkbox"]):hover {
+  border-color: var(--cyan-border);
+}
+
+.controls input:not([type="checkbox"]):focus {
+  border-color: var(--cyan);
+  background: rgba(0, 245, 225, 0.045);
+  box-shadow: 0 0 0 3px rgba(0, 245, 225, 0.09);
 }
 
 .controls label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #b9c0c8;
   font-size: 12px;
-  opacity: 0.6;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
 }
 
+.controls label:hover {
+  color: var(--cyan);
+  border-color: var(--cyan-border);
+  background: rgba(0, 245, 225, 0.045);
+}
+
+.controls input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin: 0;
+  border: 1px solid #68727d;
+  border-radius: 5px;
+  background: #14181b;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.controls input[type="checkbox"]::before {
+  content: "";
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid #001a18;
+  border-bottom: 2px solid #001a18;
+  transform: rotate(-45deg) scale(0);
+  transition: transform 150ms ease;
+}
+
+.controls input[type="checkbox"]:checked {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0, 245, 225, 0.22);
+}
+
+.controls input[type="checkbox"]:checked::before {
+  transform: rotate(-45deg) scale(1);
+}
+
+.controls input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* Tic Tac Toe board: always square, always 3 x 3 */
+
 .board {
-width: min(450px, 90vw);
-aspect-ratio: 1 / 1;
-height: auto;
-display: grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-grid-template-rows: repeat(3, minmax(0, 1fr));
-gap: 16px;
-margin: auto;
-box-sizing: border-box;
+  width: min(430px, 90vw);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: stretch;
 }
 
 .cell {
-width: 100%;
-height: 100%;
-min-width: 0;
-min-height: 0;
-box-sizing: border-box;
-overflow: hidden;
-background: radial-gradient(circle at top, #111, #050505);
-border-radius: 22px;
-display: flex;
-justify-content: center;
-align-items: center;
-font-size: 44px;
-line-height: 1;
-cursor: pointer;
-box-shadow:
-inset 0 0 18px rgba(255,255,255,0.05),
-0 18px 40px rgba(0,0,0,0.8);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.045),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #101214, #060708);
+  border: 1px solid rgba(255, 255, 255, 0.035);
+  border-radius: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1;
+  cursor: pointer;
+  box-shadow:
+    inset 0 0 18px rgba(255, 255, 255, 0.025),
+    0 12px 30px rgba(0, 0, 0, 0.45);
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.cell:not(.filled):hover {
+  border-color: rgba(0, 245, 225, 0.28);
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0, 245, 225, 0.07),
+      transparent 75%
+    ),
+    #0a0d0e;
+  box-shadow:
+    inset 0 0 20px rgba(0, 245, 225, 0.025),
+    0 0 18px rgba(0, 245, 225, 0.055);
+  transform: translateY(-2px);
 }
 
 .cell.filled {
   cursor: default;
+  border-color: rgba(0, 245, 225, 0.10);
 }
 
+.cell:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* Reset button */
+
 #reset {
-  margin-top: 40px;
+  margin-top: 32px;
   padding: 14px 40px;
-  background: transparent;
-  border: 1px solid rgba(0,245,225,0.6);
-  color: #00f5e1;
+  background: rgba(0, 245, 225, 0.015);
+  border: 1px solid rgba(0, 245, 225, 0.6);
+  color: var(--cyan);
   border-radius: 999px;
   letter-spacing: 4px;
   font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  transition:
+    color 200ms ease,
+    background 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
 
 #reset:hover {
-  box-shadow: 0 0 20px rgba(0,245,225,0.5);
+  background: rgba(0, 245, 225, 0.09);
+  border-color: var(--cyan);
+  box-shadow: 0 0 22px rgba(0, 245, 225, 0.20);
+  transform: translateY(-1px);
 }
+
+#reset:active {
+  transform: translateY(0);
+}
+
+#reset:focus-visible,
+.modal button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 4px;
+}
+
+/* Result modal */
 
 .overlay {
   position: fixed;
+  z-index: 10;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: none;
   justify-content: center;
   align-items: center;
 }
 
 .modal {
-  background: #050505;
-  padding: 36px 48px;
+  width: min(100%, 420px);
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(0, 245, 225, 0.055),
+      transparent 65%
+    ),
+    #080a0b;
+  border: 1px solid rgba(0, 245, 225, 0.22);
+  padding: 36px 32px;
   border-radius: 22px;
   text-align: center;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(0, 245, 225, 0.055);
 }
 
 .modal button {
   margin-top: 20px;
   padding: 10px 28px;
-  background: #00f5e1;
+  background: var(--cyan);
+  color: #001a18;
   border: none;
   border-radius: 999px;
+  font-weight: 600;
   cursor: pointer;
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
+
 .modal button:hover {
-  box-shadow: 0 0 20px rgba(0,245,225,0.5);
+  box-shadow: 0 0 20px rgba(0, 245, 225, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Tablet layout */
+
+@media (max-width: 1050px) {
+  body {
+    padding: 36px 22px;
+    align-items: flex-start;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    max-width: 540px;
+  }
+
+  .game {
+    grid-row: 1;
+  }
+
+  .trivia {
+    padding: 18px;
+    border: 1px solid rgba(0, 245, 225, 0.10);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.018);
+  }
+
+  .trivia-doughnut {
+    grid-row: 2;
+  }
+
+  .trivia-banana {
+    grid-row: 3;
+  }
+
+  .trivia::after {
+    top: 50%;
+    left: auto;
+    right: 16px;
+    font-size: 58px;
+    transform: translateY(-50%);
+  }
+
+  .trivia:hover::after {
+    transform: translateY(calc(-50% - 3px));
+  }
+
+  .trivia p {
+    max-width: 390px;
+    padding-right: 48px;
+  }
+}
+
+/* Mobile layout */
+
+@media (max-width: 520px) {
+  body {
+    padding: 28px 16px;
+  }
+
+  .layout {
+    gap: 22px;
+  }
+
+  h1 {
+    font-size: 25px;
+    letter-spacing: 4px;
+  }
+
+  #status {
+    margin-bottom: 22px;
+  }
+
+  .controls {
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .controls input:not([type="checkbox"]) {
+    width: calc(50% - 5px);
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .controls label {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .board {
+    width: min(100%, 90vw);
+    aspect-ratio: 1 / 1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .cell {
+    border-radius: 16px;
+  }
+
+  #reset {
+    margin-top: 26px;
+    padding: 13px 30px;
+    letter-spacing: 3px;
+  }
+
+  .trivia {
+    padding: 14px;
+  }
+
+  .trivia h3 {
+    font-size: 14px;
+  }
+
+  .trivia p {
+    font-size: 12px;
+    padding-right: 42px;
+  }
+
+  .trivia::after {
+    right: 12px;
+    font-size: 48px;
+  }
+
+  .modal {
+    padding: 30px 22px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
