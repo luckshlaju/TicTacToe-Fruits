@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -52,37 +51,45 @@ pipeline {
                               --region %AWS_REGION% ^
                               --instance-ids %EC2_INSTANCE% ^
                               --document-name AWS-RunShellScript ^
-                              --parameters "commands=['sudo docker pull ghcr.io/luckshlaju/tictactoe-fruits:latest && sudo docker rm -f tictactoe && sudo docker run -d --name tictactoe -p 80:80 ghcr.io/luckshlaju/tictactoe-fruits:latest']" ^
+                              --parameters "commands=['sudo docker pull ghcr.io/luckshlaju/tictactoe-fruits:latest && sudo docker rm -f tictactoe && sudo docker run -d --restart unless-stopped --name tictactoe -p 80:80 ghcr.io/luckshlaju/tictactoe-fruits:latest']" ^
                               --query "Command.CommandId" ^
                               --output text
                         ''',
                         returnStdout: true
-                    ).trim()
+                    ).trim().readLines().last()
 
                     echo "SSM Command ID: ${commandId}"
 
-                    bat """
-                        @echo off
-                        set CMD_ID=${commandId}
-                        set STATUS=InProgress
-                        for /L %%i in (1,1,30) do (
-                            for /F %%s in ('aws ssm get-command-invocation --region %AWS_REGION% --command-id %CMD_ID% --instance-id %EC2_INSTANCE% --query Status --output text 2^>nul') do set STATUS=%%s
-                            if "!STATUS!"=="Success" goto deployed
-                            if "!STATUS!"=="Failed" goto failed
-                            if "!STATUS!"=="TimedOut" goto failed
-                            if "!STATUS!"=="Cancelled" goto failed
-                            timeout /t 5 /nobreak >nul
-                        )
-                        echo Deployment status: %STATUS%
-                        exit /b 1
-                        :deployed
-                        echo Deployment succeeded.
-                        exit /b 0
-                        :failed
-                        echo Deployment failed with status %STATUS%.
-                        aws ssm get-command-invocation --region %AWS_REGION% --command-id %CMD_ID% --instance-id %EC2_INSTANCE% --output text
-                        exit /b 1
-                    """
+                    def status = 'Pending'
+
+                    for (int i = 0; i < 30; i++) {
+                        sleep(time: 5, unit: 'SECONDS')
+
+                        status = bat(
+                            script: """
+                                @echo off
+                                aws ssm get-command-invocation ^
+                                  --region %AWS_REGION% ^
+                                  --command-id ${commandId} ^
+                                  --instance-id %EC2_INSTANCE% ^
+                                  --query Status ^
+                                  --output text 2>nul
+                            """,
+                            returnStdout: true
+                        ).trim().readLines().last()
+
+                        echo "Deployment status: ${status}"
+
+                        if (status in ['Success', 'Failed', 'TimedOut', 'Cancelled']) {
+                            break
+                        }
+                    }
+
+                    if (status != 'Success') {
+                        error("EC2 deployment did not succeed. Final SSM status: ${status}")
+                    }
+
+                    echo 'EC2 deployment completed successfully!'
                 }
             }
         }
